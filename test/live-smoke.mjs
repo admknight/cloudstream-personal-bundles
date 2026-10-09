@@ -32,7 +32,8 @@ async function run() {
   assert.match(htmlResponse.headers.get('content-type') || '', /text\/html/i);
   assert.match(html, /Your CloudStream plugins/);
   console.log('PASS: Public homepage has three-step guidance, approved favicon, About section and is indexable.');
-  const links = [...html.matchAll(/<a\\b[^>]*>/g)].map(match => match[0]);
+  const links = html.split('<a ').slice(1).map(chunk => '<a ' + chunk.split('>')[0] + '>');
+  assert.ok(links.length >= 10, 'Expected navigation links in deployed page');
   for (const link of links) {
     const href = link.match(/href="([^"]+)"/)?.[1];
     if (!href) continue;
@@ -43,7 +44,7 @@ async function run() {
       assert.doesNotMatch(link,/target="_blank"/,'On-page destinations must remain in the current tab');
     }
   }
-  assert.match(html,/open.href='cloudstreamrepo:\\/\\//,'CloudStream app deep links must retain their app-launch behavior');
+  assert.ok(html.includes("open.href='cloudstreamrepo://'+location.host"),'CloudStream app links must retain app-launch behavior');
   console.log('PASS: Navigation follows link target policy without changing CloudStream app deep links.');
 
   const apiResponse = await get(BASE + '/api/catalog');
