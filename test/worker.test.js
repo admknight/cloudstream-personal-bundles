@@ -83,6 +83,12 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/Create my repository link/);
  assert.match(html,/Three steps to use a personal CloudStream repository/);
  assert.match(html,/id="about"/);
+ assert.match(html,/<button id="back-to-top"[^>]*hidden>/);
+ assert.match(html,/function setupBackToTop\(\)/);
+ assert.match(html,/button\.hidden = .*<= 320/);
+ assert.match(html,/window\.addEventListener\("scroll", update, \{ passive: true \}\)/);
+ assert.match(html,/window\.scrollTo\(\{/);
+ assert.match(html,/prefers-reduced-motion: reduce/);
  assert.match(html,/src="https:\/\/hits\.sh\/adam-cloudstream-bundles\.badass-insane\.workers\.dev\.svg/);
  assert.match(html,/referrerpolicy="no-referrer"/);
  assert.match(html,/A MegaRepo companion, not a replacement/);
