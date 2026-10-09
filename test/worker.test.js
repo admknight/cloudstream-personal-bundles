@@ -82,6 +82,9 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/<title>Choose Your CloudStream Plugins/);
  assert.match(html,/Create my repository link/);
  assert.match(html,/Three steps to use a personal CloudStream repository/);
+ assert.match(html,/id="about"/);
+ assert.match(html,/A MegaRepo companion, not a replacement/);
+ assert.match(html,/href="#about">About<\/a>/);
  assert.match(html,/<link rel="icon" type="image\/png" href="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png">/);
  assert.match(html,/<link rel="apple-touch-icon"/);
  assert.match(html,/<a class="brand"[^>]+><img src="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png"/);
