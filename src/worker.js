@@ -2,8 +2,8 @@ import {decodeSelection} from './selection.js';
 import {getCatalog} from './catalog.js';
 import {page} from './ui.js';
 
-const ROBOTS = {'X-Robots-Tag':'noindex, nofollow', 'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'no-referrer', 'Cache-Control':'no-store'};
-const JSON_HEADERS = {'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'*','X-Content-Type-Options':'nosniff','Cache-Control':'public, max-age=120'};
+const PUBLIC_PAGE_HEADERS = {'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'no-referrer', 'Cache-Control':'no-store'};
+const JSON_HEADERS = {'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'*','X-Content-Type-Options':'nosniff','Cache-Control':'public, max-age=120','X-Robots-Tag':'noindex, nofollow'};
 function json(payload, status = 200, headers = JSON_HEADERS) {
   return new Response(JSON.stringify(payload),{status,headers});
 }
@@ -23,7 +23,7 @@ export default {
     const url = new URL(request.url);
     if (request.method !== 'GET' && request.method !== 'HEAD') return error(405,'Method not allowed');
     if (url.pathname === '/' || url.pathname === '/index.html') {
-      const html = new Response(page, {headers:{...ROBOTS,'Content-Type':'text/html; charset=utf-8',
+      const html = new Response(page, {headers:{...PUBLIC_PAGE_HEADERS,'Content-Type':'text/html; charset=utf-8',
         'Content-Security-Policy':"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"}});
       return request.method==='HEAD'?new Response(null,{headers:html.headers}):html;
     }
