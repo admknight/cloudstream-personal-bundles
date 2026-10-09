@@ -89,7 +89,7 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/window\.addEventListener\("scroll", update, \{ passive: true \}\)/);
  assert.match(html,/window\.scrollTo\(\{/);
  assert.match(html,/prefers-reduced-motion: reduce/);
- assert.match(html,/src="https:\/\/hits\.sh\/adam-cloudstream-bundles\.badass-insane\.workers\.dev\.svg/);
+ assert.match(html,/src="https:\/\/adam-cloudstream-bundles\.badass-insane\.workers\.dev\/assets\/site-views\/builder\.svg/);
  assert.match(html,/referrerpolicy="no-referrer"/);
  assert.match(html,/A MegaRepo companion, not a replacement/);
  assert.match(html,/href="#about">About<\/a>/);
@@ -115,7 +115,8 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/cloudstreamrepo:\/\//);
  assert.equal(html.includes('<script src='),false);
  assert.match(r.headers.get('Content-Security-Policy'),/connect-src 'self'/);
- assert.match(r.headers.get('Content-Security-Policy'),/img-src 'self' data: https:\/\/raw\.githubusercontent\.com https:\/\/hits\.sh/);
+ assert.match(r.headers.get('Content-Security-Policy'),/img-src 'self' data: https:\/\/raw\.githubusercontent\.com/);
+ assert.doesNotMatch(r.headers.get('Content-Security-Policy'),/hits\.sh/);
  assert.match(r.headers.get('Content-Security-Policy'),/default-src 'none'/);
  const head=await respond('https://demo.example.workers.dev/',{method:'HEAD'});
  assert.equal(head.status,200);assert.equal(await head.text(),'');

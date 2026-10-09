@@ -1,6 +1,7 @@
 import {decodeSelection} from './selection.js';
 import {getCatalog} from './catalog.js';
 import {page} from './ui.js';
+import {isSiteViewPath,siteViewResponse} from './pageViews.js';
 
 const PUBLIC_PAGE_HEADERS = {'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'no-referrer', 'Cache-Control':'no-store'};
 const JSON_HEADERS = {'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'*','X-Content-Type-Options':'nosniff','Cache-Control':'public, max-age=120','X-Robots-Tag':'noindex, nofollow'};
@@ -22,9 +23,13 @@ export default {
   async fetch(request) {
     const url = new URL(request.url);
     if (request.method !== 'GET' && request.method !== 'HEAD') return error(405,'Method not allowed');
+    if (isSiteViewPath(url.pathname)) {
+      if (url.search) return error(400,'Unexpected query');
+      return siteViewResponse(url.pathname,request.method);
+    }
     if (url.pathname === '/' || url.pathname === '/index.html') {
       const html = new Response(page, {headers:{...PUBLIC_PAGE_HEADERS,'Content-Type':'text/html; charset=utf-8',
-        'Content-Security-Policy':"default-src 'none'; img-src 'self' data: https://raw.githubusercontent.com https://hits.sh; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"}});
+        'Content-Security-Policy':"default-src 'none'; img-src 'self' data: https://raw.githubusercontent.com; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"}});
       return request.method==='HEAD'?new Response(null,{headers:html.headers}):html;
     }
     const catalogRoute = url.pathname === '/api/catalog';

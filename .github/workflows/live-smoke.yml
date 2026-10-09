@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - 'test/live-smoke.mjs'
+      - 'src/worker.js'
+      - 'src/pageViews.js'
+      - 'src/ui.js'
       - '.github/workflows/live-smoke.yml'
   workflow_dispatch:
 

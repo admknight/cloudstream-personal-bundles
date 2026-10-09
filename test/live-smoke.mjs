@@ -24,7 +24,7 @@ async function run() {
         && html.includes('id="back-to-top"')
         && html.includes('setupBackToTop();')
         && html.includes('<link rel="icon" type="image/png"')
-        && html.includes('https://hits.sh/adam-cloudstream-bundles.badass-insane.workers.dev.svg')
+        && html.includes('https://adam-cloudstream-bundles.badass-insane.workers.dev/assets/site-views/builder.svg')
         && html.includes('href="#about">About</a>')
         && !htmlResponse.headers.has('X-Robots-Tag');
       if (ready) break;
@@ -49,8 +49,18 @@ async function run() {
   }
   assert.ok(html.includes("open.href='cloudstreamrepo://'+location.host"),'CloudStream app links must retain app-launch behavior');
   console.log('PASS: Navigation follows link target policy without changing CloudStream app deep links.');
-  assert.match(htmlResponse.headers.get('Content-Security-Policy') || '', /img-src [^;]*https:\/\/hits\.sh/);
-  console.log('PASS: Page-view badge host is permitted by the Worker image security policy.');
+  assert.match(htmlResponse.headers.get('Content-Security-Policy') || '', /img-src [^;]*'self'/);
+  console.log('PASS: Site-view badges are served from the Builder Worker origin.');
+
+  for (const name of ['portfolio','megarepo','explorer','builder']) {
+    const badge = await get(BASE + '/assets/site-views/' + name + '.svg');
+    assert.match(badge.headers.get('content-type') || '', /image\/svg\+xml/);
+    assert.equal(badge.headers.get('X-Page-Views-Status'), 'ok', name + ' failed to load counter data');
+    const svg = await badge.text();
+    assert.match(svg, /PAGE VIEWS/);
+    assert.doesNotMatch(svg, /unavailable/);
+  }
+  console.log('PASS: Four first-party page-view badges returned real provider counts.');
 
   const apiResponse = await get(BASE + '/api/catalog');
   assert.match(apiResponse.headers.get('content-type') || '', /application\/json/i);
