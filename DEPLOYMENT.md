@@ -1,6 +1,6 @@
 # Deploy the Personal Bundle Builder
 
-The code is ready to deploy as an independent Cloudflare Worker. Only the owner of the hosting account can authorize the first deployment.
+The Personal Repository Builder is **already live** at https://adam-cloudstream-bundles.badass-insane.workers.dev/ and has been tested with real Android CloudStream installations. These steps document the deployment and how to configure another instance. Only the owner of a Cloudflare account can authorize their deployment.
 
 ## 1. Source and continuous integration (completed)
 
@@ -13,10 +13,10 @@ The separate source repository is published at [admknight/cloudstream-personal-b
 The official Cloudflare Workers dashboard supports importing an existing Git repository:
 
 1. Sign in to https://dash.cloudflare.com/ and open **Workers & Pages**.
-2. Choose **Create application** and select the Git repository you created in step 1.
+2. Choose **Create application** and select the `admknight/cloudstream-personal-bundles` Git repository (or your own fork).
 3. Choose the `main` production branch and project root `/`. The Worker name must match `adam-cloudstream-bundles` in `wrangler.toml` (change both together if the name is unavailable). Leave the optional build command empty, and use the deploy command `npx wrangler deploy`.
 4. Allow Cloudflare to deploy the Worker. No KV/D1 binding or environment secret is required.
-5. Note the actual HTTPS Worker URL, normally `https://adam-cloudstream-bundles.YOUR-SUBDOMAIN.workers.dev/`.
+5. Confirm the HTTPS Worker URL. The existing service is `https://adam-cloudstream-bundles.badass-insane.workers.dev/`; a second deployment may use another workers.dev subdomain.
 
 **Alternative CLI:** with Node.js 20+ installed, run `npm install`, `npm test`, `npx wrangler login`, then `npm run deploy`. Only you can authenticate your Cloudflare account; do not share API tokens or passwords in chat.
 
@@ -37,7 +37,7 @@ If these tests fail, leave the main MegaRepo unchanged and troubleshoot the Work
 
 ## 4. Link to MegaRepo after app verification
 
-Once the personal install link works in the real CloudStream app, add a simple optional link from the existing MegaRepo Extension Explorer/dashboard: **Build my personal bundle** → your Cloudflare Worker URL. Do **not** change the main MegaRepo `repo.json` or its short code.
+The live MegaRepo dashboard and Extension Explorer already link to the Personal Repository Builder. They are three distinct user paths: full catalog installation, discovery-only browsing, or generating a selected-only repository. Do **not** change the main MegaRepo `repo.json` or its shortcode `admknight`.
 
 ## 5. Rollback
 

@@ -41,6 +41,8 @@ test('generates installable repo.json and keeps upstream package entries unchang
  const listed=await pluginsResponse.json();
  assert.deepEqual(listed.slice().sort((a,b)=>a.internalName.localeCompare(b.internalName)),plugins.filter(p=>p.status!==0).sort((a,b)=>a.internalName.localeCompare(b.internalName)));
  assert.equal(listed[0].fileHash,'sha256-aabb');
+ assert.match(r.headers.get('X-Robots-Tag'),/noindex/);
+ assert.match(pluginsResponse.headers.get('X-Robots-Tag'),/noindex/);
 });
 
 test('bundles continue to serve surviving selections when an upstream plugin disappears',async()=>{
@@ -77,8 +79,11 @@ test('empty mode, removed plugins and malformed tokens fail closed',async()=>{
 test('frontend is served with no third party scripts and restrictive browser headers',async()=>{
  const r=await respond('https://demo.example.workers.dev/');
  assert.equal(r.status,200);const html=await r.text();
- assert.match(html,/<title>Personal Bundle Builder/);
+ assert.match(html,/<title>Choose Your CloudStream Plugins/);
  assert.match(html,/Create my repository link/);
+ assert.match(html,/Three steps to use a personal CloudStream repository/);
+ assert.match(html,/Install only the extensions you choose|Your CloudStream plugins/);
+ assert.equal(r.headers.get('X-Robots-Tag'),null);
  assert.match(html,/cloudstreamrepo:\/\//);
  assert.equal(html.includes('<script src='),false);
  assert.match(r.headers.get('Content-Security-Policy'),/connect-src 'self'/);
