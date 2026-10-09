@@ -6,6 +6,14 @@ An independent, read-only **personal repository builder** for the published [Ada
 
 Users choose extensions in a web dashboard, generate a unique CloudStream-compatible HTTPS `repo.json` link, add that repository inside CloudStream, and install only the listed extensions. The service neither modifies MegaRepo nor repackages or hosts plugin binaries.
 
+## About Personal Bundles
+
+**Personal Bundles** is a standalone, read-only companion to [Adam Knight MegaRepo](https://admknight.github.io/CloudstreamExtensions/), not another upstream catalog or a replacement for the full MegaRepo. It reads the existing published extension feed and creates a CloudStream-compatible repository containing only the plugin identities selected by the visitor.
+
+The service uses no user accounts or server-side selection database and hosts no plugin packages. Existing links continue to follow current published metadata for stable plugin identities, but **changing the selection requires generating a new URL**. Add the personal repository in CloudStream, then install individual plugins yourself.
+
+**Useful links:** [Launch Builder](https://adam-cloudstream-bundles.badass-insane.workers.dev/) · [Full MegaRepo](https://admknight.github.io/CloudstreamExtensions/) · [Extension Explorer](https://admknight.github.io/CloudstreamExtensions/explore.html).
+
 ## Choose the right option
 
 **Full MegaRepo** provides the whole catalog; **Personal Repository Builder** creates a selected-only catalog URL; **Extension Explorer** provides local bookmarks for discovery. These are three different outcomes, not three ways to automatically install plugins.
