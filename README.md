@@ -8,6 +8,8 @@ Users choose extensions in a web dashboard, generate a unique CloudStream-compat
 
 ## Choose the right option
 
+**Full MegaRepo** provides the whole catalog; **Personal Repository Builder** creates a selected-only catalog URL; **Extension Explorer** provides local bookmarks for discovery. These are three different outcomes, not three ways to automatically install plugins.
+
 | Your goal | Use this | What happens |
 | --- | --- | --- |
 | **All available extensions** | [Full MegaRepo](https://admknight.github.io/CloudstreamExtensions/#install-full) — shortcode `admknight` | Add the complete catalog in CloudStream and install individual plugins when needed. |
