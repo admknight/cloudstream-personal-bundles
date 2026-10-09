@@ -64,7 +64,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- README.md DEPLOYMENT.md package.json wrangler.toml .gitignore
-          git add -- .github/workflows/test.yml src/ test/
+          rm -- .github/workflows/test.yml
+          git add -- src/ test/
           git rm -- cloudstream-personal-bundle-builder.zip
           git commit -m 'feat: publish verified Personal Bundle Builder source'
           git push origin HEAD:main
