@@ -2,11 +2,11 @@
 
 The code is ready to deploy as an independent Cloudflare Worker. Only the owner of the hosting account can authorize the first deployment.
 
-## 1. Create a separate GitHub repository
+## 1. Source and continuous integration (completed)
 
-Create an empty repository named `admknight/cloudstream-personal-bundles` (private or public, your choice), and upload the contents of this project folder to its root. **Do not** upload these files into the working MegaRepo repository or replace any of MegaRepo's current files. You can ask ChatGPT to publish the files after the new repo exists and is accessible through the GitHub connector.
+The separate source repository is published at [admknight/cloudstream-personal-bundles](https://github.com/admknight/cloudstream-personal-bundles) on `main`. The archived project was checksum-verified and imported successfully. The read-only GitHub Actions workflow at `.github/workflows/test.yml` runs the Node tests on pushes and pull requests.
 
-Keep `.github/workflows/test.yml` to run tests on future pushes. That workflow has no deployment or write permission.
+**No further ZIP upload or GitHub repository creation is required.** The MegaRepo repository and its existing installation links remain unchanged.
 
 ## 2. Deploy with Cloudflare
 
@@ -14,7 +14,7 @@ The official Cloudflare Workers dashboard supports importing an existing Git rep
 
 1. Sign in to https://dash.cloudflare.com/ and open **Workers & Pages**.
 2. Choose **Create application** and select the Git repository you created in step 1.
-3. Keep the project root at `/`, with `wrangler.toml` and `src/worker.js` in their included paths. Set the Worker name to `adam-cloudstream-bundles`, or adjust `wrangler.toml` before deployment if the name is unavailable.
+3. Choose the `main` production branch and project root `/`. The Worker name must match `adam-cloudstream-bundles` in `wrangler.toml` (change both together if the name is unavailable). Leave the optional build command empty, and use the deploy command `npx wrangler deploy`.
 4. Allow Cloudflare to deploy the Worker. No KV/D1 binding or environment secret is required.
 5. Note the actual HTTPS Worker URL, normally `https://adam-cloudstream-bundles.YOUR-SUBDOMAIN.workers.dev/`.
 
