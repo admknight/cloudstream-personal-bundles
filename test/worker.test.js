@@ -101,7 +101,7 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/<link rel="icon" type="image\/png" href="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png">/);
  assert.match(html,/<link rel="apple-touch-icon"/);
  assert.match(html,/<a class="brand"[^>]+><img src="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png"/);
- assert.match(html,/<a href="https:\/\/admknight\.github\.io\/">Portfolio<\/a>/);
+ assert.match(html,/<a href="https:\/\/admknight\.github\.io\/" target="_blank" rel="noopener noreferrer">Portfolio<\/a>/);
  assert.match(html,/Install only the extensions you choose|Your CloudStream plugins/);
  assert.equal(r.headers.get('X-Robots-Tag'),null);
  assert.match(html,/cloudstreamrepo:\/\//);
