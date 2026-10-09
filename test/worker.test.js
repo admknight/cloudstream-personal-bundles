@@ -83,6 +83,8 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/Create my repository link/);
  assert.match(html,/Three steps to use a personal CloudStream repository/);
  assert.match(html,/id="about"/);
+ assert.match(html,/src="https:\/\/hits\.sh\/adam-cloudstream-bundles\.badass-insane\.workers\.dev\.svg/);
+ assert.match(html,/referrerpolicy="no-referrer"/);
  assert.match(html,/A MegaRepo companion, not a replacement/);
  assert.match(html,/href="#about">About<\/a>/);
  const links = [...html.matchAll(/<a\b[^>]*>/g)].map(match => match[0]);
@@ -107,7 +109,7 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/cloudstreamrepo:\/\//);
  assert.equal(html.includes('<script src='),false);
  assert.match(r.headers.get('Content-Security-Policy'),/connect-src 'self'/);
- assert.match(r.headers.get('Content-Security-Policy'),/img-src 'self' data: https:\/\/raw\.githubusercontent\.com/);
+ assert.match(r.headers.get('Content-Security-Policy'),/img-src 'self' data: https:\/\/raw\.githubusercontent\.com https:\/\/hits\.sh/);
  assert.match(r.headers.get('Content-Security-Policy'),/default-src 'none'/);
  const head=await respond('https://demo.example.workers.dev/',{method:'HEAD'});
  assert.equal(head.status,200);assert.equal(await head.text(),'');
