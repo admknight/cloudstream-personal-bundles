@@ -16,7 +16,7 @@ Users choose extensions in a web dashboard, generate a unique CloudStream-compat
 
 **A repository is a list of available extensions, not an automatic installer.** You install individual plugins from CloudStream after adding your repository.
 
-This project is part of a connected discovery → selection → installation workflow, backed by guarded multi-source aggregation and read-only integrity checks. Personalized CloudStream repositories are not a new invention; this integration is the project's distinctive contribution.
+This service connects discovery, selected-only installation and guarded catalog maintenance without requiring user accounts or duplicating plugin packages.
 
 ## What it does
 
