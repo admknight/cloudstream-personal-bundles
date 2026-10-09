@@ -5,7 +5,7 @@ export const page = String.raw`<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#09111d">
-<title>Choose Your CloudStream Plugins | Adam Knight Personal Repo Builder</title>
+<title>Choose Your CloudStream Plugins | Adam Knight Personal Repository Builder</title>
 <meta name="description" content="Select up to 100 CloudStream extensions and generate a personal repository URL that lists only your choices. Full MegaRepo and Extension Explorer are separate options.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://adam-cloudstream-bundles.badass-insane.workers.dev/">
