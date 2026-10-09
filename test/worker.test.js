@@ -79,7 +79,7 @@ test('empty mode, removed plugins and malformed tokens fail closed',async()=>{
 test('frontend is served with no third party scripts and restrictive browser headers',async()=>{
  const r=await respond('https://demo.example.workers.dev/');
  assert.equal(r.status,200);const html=await r.text();
- assert.match(html,/<title>Personal Bundle Builder/);
+ assert.match(html,/<title>Choose Your CloudStream Plugins/);
  assert.match(html,/Create my repository link/);
  assert.match(html,/Three steps to use a personal CloudStream repository/);
  assert.match(html,/Install only the extensions you choose|Your CloudStream plugins/);
