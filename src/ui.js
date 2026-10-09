@@ -30,6 +30,14 @@ h2{font-size:1.18rem;letter-spacing:-.025em;margin:0}.panel{background:linear-gr
 .about-project{margin-top:20px}.about-head h2{font-size:clamp(1.25rem,3vw,1.65rem);letter-spacing:-.03em}.about-head>p:last-child{line-height:1.65;max-width:830px}.about-head .eyebrow{color:var(--cyan);font-size:.7rem;font-weight:800;letter-spacing:.12em;margin-bottom:7px;text-transform:uppercase}.about-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:19px 0 17px}.about-facts>div{background:#0d1b2d;border:1px solid #304760;border-radius:11px;padding:15px}.about-facts strong{display:block;color:#edf7ff;margin-bottom:8px;font-size:.91rem}.about-facts span{color:#a9c0d5;font-size:.83rem;line-height:1.55;display:block}.about-source{font-size:.84rem;line-height:1.5}
 @media(max-width:870px){.about-facts{grid-template-columns:1fr}.journey{grid-template-columns:1fr 1fr}.filter-grid{grid-template-columns:1fr 1fr}.filter-grid label:first-child{grid-column:1/-1}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.journey{grid-template-columns:1fr}.journey li{padding:14px}.hero{padding-top:34px}nav .shell{padding:16px 0;align-items:flex-start;flex-direction:column;gap:10px}.hero{padding-top:36px}.filter-grid,.cards{grid-template-columns:1fr}.filter-grid label:first-child{grid-column:auto}.panel{padding:16px}.out{flex-direction:column;align-items:stretch}.out input{width:100%}.toolbar{align-items:flex-start;flex-direction:column}.checks{align-items:flex-start;flex-direction:column;gap:8px}}
+
+/* Shared MegaRepo ecosystem back-to-top control. */
+.back-to-top{position:fixed;right:20px;bottom:20px;z-index:1001;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:74px;padding:10px 15px;border:1px solid #407395;border-radius:999px;background:linear-gradient(145deg,#153b59,#0c2035);box-shadow:0 12px 32px rgba(0,0,0,.38);color:#f2f9ff;font:800 .85rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.back-to-top:hover{transform:translateY(-2px);background:#205473;border-color:#79dff8}
+.back-to-top:focus-visible{outline:2px solid #7de7ff;outline-offset:3px}
+.back-to-top[hidden]{display:none}
+@media(max-width:620px){.back-to-top{right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:11px 13px}}
+@media(prefers-reduced-motion:reduce){.back-to-top{transition:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -69,6 +77,7 @@ h2{font-size:1.18rem;letter-spacing:-.025em;margin:0}.panel{background:linear-gr
 </section>
 <footer>Personal repos list chosen extensions; they do not install anything automatically. No media or plugin binaries are hosted here. <a href="https://admknight.github.io/CloudstreamExtensions/#install-full" target="_blank" rel="noopener noreferrer">Full MegaRepo</a> · <a href="https://admknight.github.io/CloudstreamExtensions/explore.html" target="_blank" rel="noopener noreferrer">Explorer</a> · <a href="https://admknight.github.io/" target="_blank" rel="noopener noreferrer">Portfolio</a> · <a href="https://github.com/admknight/cloudstream-personal-bundles" target="_blank" rel="noopener noreferrer">Source code</a> · <span class="page-counter"><img src="https://hits.sh/adam-cloudstream-bundles.badass-insane.workers.dev.svg?style=flat-square&amp;label=Page+views&amp;color=43a7ff&amp;labelColor=18263a" alt="Page views for Personal Repository Builder" title="Page hits since this counter was added; not unique visitors" height="20" loading="eager" decoding="async" referrerpolicy="no-referrer"></span></footer>
 </main>
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Back to top" title="Back to top" hidden><span aria-hidden="true">↑</span> Top</button>
 <script>
 (() => {
   'use strict';
@@ -102,6 +111,20 @@ h2{font-size:1.18rem;letter-spacing:-.025em;margin:0}.panel{background:linear-gr
   [ui.search,ui.lang,ui.type,ui.adult,ui.only].forEach(input=>input.addEventListener(input===ui.search?'input':'change',()=>{pageNum=1;refresh();}));
   ui.reset.addEventListener('click',()=>{selected.clear();save();refresh();note('Selection cleared.');});ui.build.addEventListener('click',build);ui.reload.addEventListener('click',load);
   ui.prev.addEventListener('click',()=>{pageNum--;render();ui.cards.scrollIntoView({behavior:'smooth'});});ui.next.addEventListener('click',()=>{pageNum++;render();ui.cards.scrollIntoView({behavior:'smooth'});});
+
+function setupBackToTop() {
+  const button = document.getElementById("back-to-top");
+  if (!button) return;
+  const update = () => { button.hidden = (window.scrollY || document.documentElement.scrollTop || 0) <= 320; };
+  button.addEventListener("click", () => window.scrollTo({
+    top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+  }));
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("pageshow", update);
+  update();
+}
+
+  setupBackToTop();
   load();
 })();
 </script>
