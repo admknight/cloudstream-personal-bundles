@@ -1,8 +1,22 @@
 # Adam Knight | CloudStream Personal Bundles
 
+**[Open the live Personal Repository Builder](https://adam-cloudstream-bundles.badass-insane.workers.dev/)**
+
 An independent, read-only **personal repository builder** for the published [Adam Knight MegaRepo](https://github.com/admknight/CloudstreamExtensions) catalog.
 
 Users choose extensions in a web dashboard, generate a unique CloudStream-compatible HTTPS `repo.json` link, add that repository inside CloudStream, and install only the listed extensions. The service neither modifies MegaRepo nor repackages or hosts plugin binaries.
+
+## Choose the right option
+
+| Your goal | Use this | What happens |
+| --- | --- | --- |
+| **All available extensions** | [Full MegaRepo](https://admknight.github.io/CloudstreamExtensions/#install-full) — shortcode `admknight` | Add the complete catalog in CloudStream and install individual plugins when needed. |
+| **Only your own selected extensions** | **[Personal Repository Builder](https://adam-cloudstream-bundles.badass-insane.workers.dev/)** | Select up to 100 extensions, generate a personal `repo.json` URL, add it in CloudStream, then install chosen plugins. |
+| **Explore before installing** | [Extension Explorer](https://admknight.github.io/CloudstreamExtensions/explore.html) | Search, filter and bookmark names locally; bookmarks do not install extensions or automatically import into the builder. |
+
+**A repository is a list of available extensions, not an automatic installer.** You install individual plugins from CloudStream after adding your repository.
+
+This project is part of a connected discovery → selection → installation workflow, backed by guarded multi-source aggregation and read-only integrity checks. Personalized CloudStream repositories are not a new invention; this integration is the project's distinctive contribution.
 
 ## What it does
 
@@ -40,9 +54,11 @@ The Worker accepts **GET and HEAD only**. It fetches only MegaRepo's fixed offic
 
 Extensions can run code in CloudStream. Users should install only plugins they trust. SFW/NSFW grouping follows upstream `tvTypes` metadata; it is **not** a content inspection or guarantee. Package availability does not confirm that streams work.
 
-## Deploy in Cloudflare Workers
+## Live deployment and self-hosting
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for an exact walkthrough. Cloudflare account sign-in is required to deploy.
+**Public service:** https://adam-cloudstream-bundles.badass-insane.workers.dev/
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) to configure your own instance or verify an existing deployment. Cloudflare account authorization is required for a new deployment.
 
 ```bash
 npm install
@@ -55,10 +71,10 @@ Node.js 20+ is required. The deploy uses `wrangler.toml` and creates an HTTPS `w
 
 ## User flow
 
-1. Open your deployed bundle builder website.
+1. Open the [live Personal Repository Builder](https://adam-cloudstream-bundles.badass-insane.workers.dev/).
 2. Search and select the extensions you want.
 3. Click **Create my repository link**.
-4. Choose **Full personal bundle** or an SFW/NSFW-filtered URL.
+4. Choose **All my selected plugins** or an SFW/NSFW-filtered URL. **This is not the full MegaRepo.**
 5. Copy the HTTPS URL or try **Open in CloudStream** on Android.
 6. In CloudStream, open **Settings → Extensions → Add Repository**, paste the URL if needed, and then install the displayed plugins.
 
@@ -94,10 +110,10 @@ npm test
 
 Automated tests cover token generation/validation, original plugin metadata preservation, compatibility-shaped manifests, SFW/NSFW filtering, disabled entries, missing upstream identities, bad catalogs, and error handling.
 
-`test/browser-check.py` provides an additional **mocked** browser smoke test using `test/mock-server.mjs`, Python Playwright, and Chromium. It is not a live CloudStream Android install test.
+`test/browser-check.py` provides a **mocked** browser smoke test using `test/mock-server.mjs`, Python Playwright, and Chromium. The live Worker smoke test is under `test/live-smoke.mjs`. Users have also verified installing AniChan and Anichi on Android using the generated repository; this does not guarantee other plugins work.
 
-## Deployment boundary
+## Production boundary
 
-Do **not** point the live MegaRepo website at the bundle builder until the Worker is deployed and you have tested a generated repository link in the real CloudStream app. A Worker outage must never affect MegaRepo's own repository installation or daily build pipeline.
+The standalone Worker is deployed and linked from MegaRepo's website after Android installation verification. A Worker outage must never affect MegaRepo's own repository installation, three-hour guarded aggregation or hourly read-only integrity audit. Production package feeds and the MegaRepo shortcode remain independent.
 
 No streaming media or `.cs3` package binaries are hosted here. All plugin downloads remain at their original published upstream URLs.
