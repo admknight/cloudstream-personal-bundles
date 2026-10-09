@@ -12,11 +12,22 @@ async function get(url, expectedStatus = 200) {
 
 async function run() {
   assert.ok(BASE.startsWith('https://'), 'Bundle base must use HTTPS');
-  const htmlResponse = await get(BASE + '/');
+  // Cloudflare Git integration may deploy a few minutes after the GitHub push.
+  let htmlResponse, html, ready = false;
+  for (let attempt = 0; attempt < 16; attempt++) {
+    try {
+      htmlResponse = await get(BASE + '/');
+      html = await htmlResponse.text();
+      ready = html.includes('Three steps to use a personal CloudStream repository')
+        && !htmlResponse.headers.has('X-Robots-Tag');
+      if (ready) break;
+    } catch { /* Retry while Cloudflare finishes deployment. */ }
+    if (attempt < 15) await new Promise(resolve => setTimeout(resolve, 15000));
+  }
+  assert.ok(ready, 'Deployed homepage did not update within the deployment window');
   assert.match(htmlResponse.headers.get('content-type') || '', /text\/html/i);
-  const html = await htmlResponse.text();
-  assert.match(html, /Personal Bundle|CloudStream/i);
-  console.log('PASS: Homepage responds with the bundle-builder HTML.');
+  assert.match(html, /Your CloudStream plugins/);
+  console.log('PASS: Public homepage has three-step guidance and is indexable.');
 
   const apiResponse = await get(BASE + '/api/catalog');
   assert.match(apiResponse.headers.get('content-type') || '', /application\/json/i);
@@ -40,6 +51,7 @@ async function run() {
   const token = encodeSelection(sfw.map(x => x.id));
   const repoResponse = await get(`${BASE}/b/${token}/all/repo.json`);
   assert.match(repoResponse.headers.get('content-type') || '', /application\/json/i);
+  assert.match(repoResponse.headers.get('X-Robots-Tag') || '', /noindex/i);
   const manifest = await repoResponse.json();
   assert.equal(manifest.manifestVersion, 1);
   assert.equal(manifest.pluginLists.length, 1);
