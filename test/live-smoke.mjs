@@ -22,6 +22,7 @@ async function run() {
         && html.includes('id="about"')
         && html.includes('A MegaRepo companion, not a replacement.')
         && html.includes('<link rel="icon" type="image/png"')
+        && html.includes('https://hits.sh/adam-cloudstream-bundles.badass-insane.workers.dev.svg')
         && html.includes('href="#about">About</a>')
         && !htmlResponse.headers.has('X-Robots-Tag');
       if (ready) break;
@@ -46,6 +47,8 @@ async function run() {
   }
   assert.ok(html.includes("open.href='cloudstreamrepo://'+location.host"),'CloudStream app links must retain app-launch behavior');
   console.log('PASS: Navigation follows link target policy without changing CloudStream app deep links.');
+  assert.match(htmlResponse.headers.get('Content-Security-Policy') || '', /img-src [^;]*https:\/\/hits\.sh/);
+  console.log('PASS: Page-view badge host is permitted by the Worker image security policy.');
 
   const apiResponse = await get(BASE + '/api/catalog');
   assert.match(apiResponse.headers.get('content-type') || '', /application\/json/i);
