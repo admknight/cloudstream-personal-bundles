@@ -21,6 +21,8 @@ async function run() {
       ready = html.includes('Three steps to use a personal CloudStream repository')
         && html.includes('id="about"')
         && html.includes('A MegaRepo companion, not a replacement.')
+        && html.includes('id="back-to-top"')
+        && html.includes('setupBackToTop();')
         && html.includes('<link rel="icon" type="image/png"')
         && html.includes('https://hits.sh/adam-cloudstream-bundles.badass-insane.workers.dev.svg')
         && html.includes('href="#about">About</a>')
@@ -32,7 +34,7 @@ async function run() {
   assert.ok(ready, 'Deployed homepage did not update within the deployment window');
   assert.match(htmlResponse.headers.get('content-type') || '', /text\/html/i);
   assert.match(html, /Your CloudStream plugins/);
-  console.log('PASS: Public homepage has three-step guidance, approved favicon, About section and is indexable.');
+  console.log('PASS: Public homepage has three-step guidance, approved favicon, About section, scroll-only Back to Top control and is indexable.');
   const links = html.split('<a ').slice(1).map(chunk => '<a ' + chunk.split('>')[0] + '>');
   assert.ok(links.length >= 10, 'Expected navigation links in deployed page');
   for (const link of links) {
