@@ -19,6 +19,10 @@ async function run() {
       htmlResponse = await get(BASE + '/');
       html = await htmlResponse.text();
       ready = html.includes('Three steps to use a personal CloudStream repository')
+        && html.includes('id="about"')
+        && html.includes('A MegaRepo companion, not a replacement.')
+        && html.includes('<link rel="icon" type="image/png"')
+        && html.includes('href="#about">About</a>')
         && !htmlResponse.headers.has('X-Robots-Tag');
       if (ready) break;
     } catch { /* Retry while Cloudflare finishes deployment. */ }
@@ -27,7 +31,20 @@ async function run() {
   assert.ok(ready, 'Deployed homepage did not update within the deployment window');
   assert.match(htmlResponse.headers.get('content-type') || '', /text\/html/i);
   assert.match(html, /Your CloudStream plugins/);
-  console.log('PASS: Public homepage has three-step guidance and is indexable.');
+  console.log('PASS: Public homepage has three-step guidance, approved favicon, About section and is indexable.');
+  const links = [...html.matchAll(/<a\\b[^>]*>/g)].map(match => match[0]);
+  for (const link of links) {
+    const href = link.match(/href="([^"]+)"/)?.[1];
+    if (!href) continue;
+    if (href.startsWith('https://')) {
+      assert.match(link,/target="_blank"/,'External destinations must open in a new tab');
+      assert.match(link,/rel="noopener noreferrer"/,'External destinations must be opener-isolated');
+    } else if (href.startsWith('#')) {
+      assert.doesNotMatch(link,/target="_blank"/,'On-page destinations must remain in the current tab');
+    }
+  }
+  assert.match(html,/open.href='cloudstreamrepo:\\/\\//,'CloudStream app deep links must retain their app-launch behavior');
+  console.log('PASS: Navigation follows link target policy without changing CloudStream app deep links.');
 
   const apiResponse = await get(BASE + '/api/catalog');
   assert.match(apiResponse.headers.get('content-type') || '', /application\/json/i);
