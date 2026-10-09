@@ -85,6 +85,19 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/id="about"/);
  assert.match(html,/A MegaRepo companion, not a replacement/);
  assert.match(html,/href="#about">About<\/a>/);
+ const links = [...html.matchAll(/<a\b[^>]*>/g)].map(match => match[0]);
+ assert.ok(links.length >= 10, 'Expected navigation links on Builder page');
+ for (const link of links) {
+   const href = link.match(/href="([^"]+)"/)?.[1];
+   if (!href) continue;
+   if (href.startsWith('https://')) {
+     assert.match(link,/target="_blank"/,'Separate sites should open in a new tab');
+     assert.match(link,/rel="noopener noreferrer"/,'New-tab links should be opener-isolated');
+   } else if (href.startsWith('#')) {
+     assert.doesNotMatch(link,/target="_blank"/,'On-page links must stay in the current tab');
+   }
+ }
+ assert.match(html,/open.href='cloudstreamrepo:\/\//,'CloudStream deep links should keep their app handoff');
  assert.match(html,/<link rel="icon" type="image\/png" href="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png">/);
  assert.match(html,/<link rel="apple-touch-icon"/);
  assert.match(html,/<a class="brand"[^>]+><img src="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png"/);
