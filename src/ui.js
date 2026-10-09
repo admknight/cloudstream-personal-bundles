@@ -7,6 +7,10 @@ export const page = String.raw`<!doctype html>
 <meta name="theme-color" content="#09111d">
 <title>Choose Your CloudStream Plugins | Adam Knight Personal Repo Builder</title>
 <meta name="description" content="Select up to 100 CloudStream extensions and generate a personal repository URL that lists only your choices. Full MegaRepo and Extension Explorer are separate options.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adam-cloudstream-bundles.badass-insane.workers.dev/">
+<meta property="og:title" content="Build a personal CloudStream repository | Adam Knight">
+<meta property="og:description" content="Choose the extensions you want, create a personal repository link, add it in CloudStream and install your selected plugins.">
 <style>
 :root{--bg:#09111d;--surface:#111e30;--surface2:#15263b;--line:#314561;--text:#f0f6ff;--muted:#adc0d6;--cyan:#70e0ff;--green:#7de7b2;--amber:#ffd18a}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(circle at 25% -8%,#1a4060 0%,transparent 34rem),linear-gradient(#0b1524,#09111d 34rem);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
