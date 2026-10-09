@@ -82,11 +82,17 @@ test('frontend is served with no third party scripts and restrictive browser hea
  assert.match(html,/<title>Choose Your CloudStream Plugins/);
  assert.match(html,/Create my repository link/);
  assert.match(html,/Three steps to use a personal CloudStream repository/);
+ assert.match(html,/<link rel="icon" type="image\/png" href="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png">/);
+ assert.match(html,/<link rel="apple-touch-icon"/);
+ assert.match(html,/<a class="brand"[^>]+><img src="https:\/\/raw\.githubusercontent\.com\/admknight\/CloudstreamExtensions\/refs\/heads\/master\/assets\/icon\.png"/);
+ assert.match(html,/<a href="https:\/\/admknight\.github\.io\/">Portfolio<\/a>/);
  assert.match(html,/Install only the extensions you choose|Your CloudStream plugins/);
  assert.equal(r.headers.get('X-Robots-Tag'),null);
  assert.match(html,/cloudstreamrepo:\/\//);
  assert.equal(html.includes('<script src='),false);
  assert.match(r.headers.get('Content-Security-Policy'),/connect-src 'self'/);
+ assert.match(r.headers.get('Content-Security-Policy'),/img-src 'self' data: https:\/\/raw\.githubusercontent\.com/);
+ assert.match(r.headers.get('Content-Security-Policy'),/default-src 'none'/);
  const head=await respond('https://demo.example.workers.dev/',{method:'HEAD'});
  assert.equal(head.status,200);assert.equal(await head.text(),'');
 });
