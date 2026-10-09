@@ -1,0 +1,57 @@
+name: One-time Anichi checksum diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-anichi.yml'
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Compare actual upstream packages with MegaRepo and upstream metadata
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from urllib.request import Request, urlopen
+
+          mega_url = 'https://raw.githubusercontent.com/admknight/CloudstreamExtensions/refs/heads/builds/plugins.json'
+          upstream_url = 'https://raw.githubusercontent.com/phisher98/cloudstream-extensions-phisher/builds/plugins.json'
+
+          def fetch(url):
+              request = Request(url, headers={'User-Agent': 'PersonalBundle-ReadOnly-Diagnostic'})
+              with urlopen(request, timeout=25) as response:
+                  return response.status, response.read(), response.url
+
+          mega = json.loads(fetch(mega_url)[1])
+          upstream = json.loads(fetch(upstream_url)[1])
+          by_name = lambda items, name: next(item for item in items if item['internalName']==name)
+
+          for name in ('Anichi',):
+              old = by_name(mega, name)
+              current = by_name(upstream, name)
+              status, body, resolved = fetch(current['url'])
+              actual_hash = 'sha256-' + hashlib.sha256(body).hexdigest()
+              print('PLUGIN:', name)
+              print('ORIGIN_DOWNLOAD_STATUS:', status)
+              print('ORIGIN_DOWNLOAD_URL:', resolved)
+              print('ACTUAL_BYTES:', len(body))
+              print('ACTUAL_SHA256:', actual_hash)
+              print('MEGA_VERSION:', old['version'], 'SOURCE_VERSION:', current['version'])
+              print('MEGA_FILESIZE:', old.get('fileSize'), 'SOURCE_FILESIZE:', current.get('fileSize'))
+              print('MEGA_SHA256:', old.get('fileHash'))
+              print('SOURCE_SHA256:', current.get('fileHash'))
+              print('MEGA_HASH_MATCH:', old.get('fileHash')==actual_hash)
+              print('SOURCE_HASH_MATCH:', current.get('fileHash')==actual_hash)
+              print('MEGA_SIZE_MATCH:', old.get('fileSize')==len(body))
+              print('SOURCE_SIZE_MATCH:', current.get('fileSize')==len(body))
+              if old.get('fileHash') != actual_hash and current.get('fileHash')==actual_hash:
+                  print('DIAGNOSIS: MEGAREPO_STALE_CHECKSUM_CONFIRMED')
+              elif old.get('fileHash') == actual_hash:
+                  print('DIAGNOSIS: MEGAREPO_CHECKSUM_CURRENT')
+              else:
+                  print('DIAGNOSIS: SOURCE_AND_MEGAREPO_METADATA_MISMATCH_OR_PACKAGE_CHANGED')
+          PY
