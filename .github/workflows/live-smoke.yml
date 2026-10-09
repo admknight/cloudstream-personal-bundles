@@ -1,0 +1,25 @@
+name: Live Cloudflare Worker Smoke Test
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'test/live-smoke.mjs'
+      - '.github/workflows/live-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cloudflare-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check live site, catalog, personal manifest and selected packages
+        env:
+          BUNDLE_BASE_URL: https://adam-cloudstream-bundles.badass-insane.workers.dev
+        run: node test/live-smoke.mjs
