@@ -24,7 +24,7 @@ export default {
     if (request.method !== 'GET' && request.method !== 'HEAD') return error(405,'Method not allowed');
     if (url.pathname === '/' || url.pathname === '/index.html') {
       const html = new Response(page, {headers:{...PUBLIC_PAGE_HEADERS,'Content-Type':'text/html; charset=utf-8',
-        'Content-Security-Policy':"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"}});
+        'Content-Security-Policy':"default-src 'none'; img-src 'self' data: https://raw.githubusercontent.com; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"}});
       return request.method==='HEAD'?new Response(null,{headers:html.headers}):html;
     }
     const catalogRoute = url.pathname === '/api/catalog';
